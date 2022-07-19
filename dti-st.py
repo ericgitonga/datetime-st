@@ -1,7 +1,6 @@
 import pandas as pd
 
 import streamlit as st
-import streamlit_analytics
 
 import plotly.express as px
 import matplotlib.pyplot as plt
@@ -20,6 +19,7 @@ df["month"] = df.index.month_name()
 df["month_number"] = df.index.month
 df["day"] = df.index.day
 df["days_in_month"] = df.index.daysinmonth
+#df["week_in_year"] = df.index.isocalendar().week
 
 year_aggregates = df.groupby("year")["funded_amount"].sum().sort_values(ascending=False).reset_index()
 
@@ -43,6 +43,25 @@ sorted_df_average = []
 for year in list(df_average["year"].unique()):
     sorted_df_average.append(df_average[df_average["year"] == year].sort_values(by="month_number"))
 df_average = pd.concat(sorted_df_average).reset_index(drop=True).         drop(["month_number","days_in_month","funded_amount"],"columns")
+
+
+#fig, ax = plt.subplots()
+
+#data = df
+#x = df["funded_amount"]
+#y = df["year"]
+#top = 1.6e8
+
+#plt.ylim(top=top)
+#plt.yticks([])
+
+#ax = sns.barplot(data=data, x=x, y=y, color="lightblue")
+#ax = sn(data, x, y)
+#ax.set(xlabel="Week", ylabel="Funded Amount")
+
+#tl_left, tl_center, tl_right = st.columns((1,4,1))
+#with tl_center:
+#    st.pyplot(fig)
 
 #Seaborn Plot
 fig, ax = plt.subplots()
@@ -73,20 +92,19 @@ fig_monthly_average = px.bar(df_average, x="month", y="monthly_average", title="
             hover_data=["year"], facet_col="year",
             labels={"monthly_average":"Monthly Average","month":""})
     
-with streamlit_analytics.track():
-    #Displaying the elements
-    tl_left, tl_center, tl_right = st.columns((1,4,1))
-    with tl_center:
-        st.markdown("## Illustrating pandas.DatetimeIndex via Kiva Funding")
-        st.dataframe(df.sample(10))
+#Displaying the elements
+tl_left, tl_center, tl_right = st.columns((1,4,1))
+with tl_center:
+    st.markdown("## Illustrating pandas.DatetimeIndex via Kiva Funding")
+    st.dataframe(df.sample(10))
+  
+left_column, center_column, right_column = st.columns(3)
+center_column.markdown("### Annual Funded Amount in Millions")
     
-    left_column, center_column, right_column = st.columns(3)
-    center_column.markdown("### Annual Funded Amount in Millions")
-    
-    left_container, center_container, right_container = st.columns((1,2,1))
+left_container, center_container, right_container = st.columns((1,2,1))
 
-    with center_container:
-        st.pyplot(fig)
+with center_container:
+    st.pyplot(fig)
 
-    st.plotly_chart(fig_highest_daily, use_container_width=True)
-    st.plotly_chart(fig_monthly_average, use_container_width=True)
+st.plotly_chart(fig_highest_daily, use_container_width=True)
+st.plotly_chart(fig_monthly_average, use_container_width=True)
