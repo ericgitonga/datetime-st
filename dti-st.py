@@ -75,15 +75,15 @@ fig_monthly_average = px.bar(df_average, x="month", y="monthly_average", title="
     
 with streamlit_analytics.track():
     #Displaying the elements
-    tl_left, tl_center, tl_right = st.beta_columns((1,4,1))
+    tl_left, tl_center, tl_right = st.columns((1,4,1))
     with tl_center:
         st.markdown("## Illustrating pandas.DatetimeIndex via Kiva Funding")
         st.dataframe(df.sample(10))
     
-    left_column, center_column, right_column = st.beta_columns(3)
+    left_column, center_column, right_column = st.columns(3)
     center_column.markdown("### Annual Funded Amount in Millions")
     
-    left_container, center_container, right_container = st.beta_columns((1,2,1))
+    left_container, center_container, right_container = st.columns((1,2,1))
 
     with center_container:
         st.pyplot(fig)
